@@ -11,3 +11,7 @@ Group members:
 - Miguel: Create the multimeter 'SDM3065X' code  
 <img src="presentacion1\multimetro.png">
 
+- Blanca:
+First graph visualitation
+<img src="presentacion1\graph1_current.png">
+
