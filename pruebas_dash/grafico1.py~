@@ -1,0 +1,38 @@
+# Make a graph basic in a .cvs
+# Author: Blanca Cano Camarero
+# File : grafico1.py
+
+# fuente de inspiración:
+# https://github.com/plotly/dash-core-components/pull/74
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import pandas as pd
+import plotly.graph_objs as go
+
+#open data file
+df = pd.read_csv( 'fd.cvs')
+
+# basic class app
+app = dash.Dash()
+
+app.layout = html.div
+(
+    [
+        dcc.Graph
+        (
+            id = 'graph_csv',
+            figure =
+            {
+                'data':[
+                    { 'x':df[time] , 'y':df[current] , 'type':'bar'},
+                    ],
+                'layout':{ 'title': 'Current'}
+        )
+    ]
+)
+
+
+if __name__ = "__main__":
+    app.run.server()
+    
