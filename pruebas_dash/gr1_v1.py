@@ -30,6 +30,9 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
             'color': colors['text']
         }
     ),
+    dict(
+        title='yaxis title'
+    ),
 
     html.Div(children='Current in time', style={
         'textAlign': 'center',
@@ -39,9 +42,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
     dcc.Graph(
         id='example-graph-2',
         figure={ 
-            'data': [  
-                # index order: voltage,current,time,capacity
-                #{'x': df[2], 'y': df[0], 'type': 'scatter', 'name': 'Voltage'}, #voltage
+            'data': [
                 { 'x': df[2] ,'y': df[0], 'type':'scatter' , 'name':'Current' } #current
             ],
             'layout': {
@@ -56,5 +57,4 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
 ])
 
 if __name__ == '__main__':
-    print (df[0])
     app.run_server(debug=True)
