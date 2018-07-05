@@ -10,5 +10,5 @@ GranaSat 2018
 
 ### comandos para subir
 `git add . ` indicas las modificaciones a subir al repo  
-`git commit `  comentas cambios 
+`git commit `  comentas cambios  
 `git push origin master`
