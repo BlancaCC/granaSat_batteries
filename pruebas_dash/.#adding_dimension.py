@@ -1,1 +1,0 @@
-blanca@blanca-HP-Pavilion-Laptop-14-bk0xx.2318:1530776233
