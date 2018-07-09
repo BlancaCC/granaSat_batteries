@@ -1,5 +1,6 @@
 # Basic dash library
 import dash
+from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 # import csv
@@ -50,6 +51,8 @@ fig_capacity = tools.make_subplots()
 fig_capacity.append_trace( capacity , 1 ,1)
 fig_capacity['layout'].update(height=600, width=600, title='capacity')
 
+fig = [ fig_voltage , fig_current , fig_capacity ]
+
 # Tests representes
 # T1	High Vacuum test
 # T2	Capacity and Internal Resistance vs Temperature
@@ -66,48 +69,34 @@ app.layout = html.Div([
     # Select test
     html.Label('Test selection:'),
     dcc.Tabs(
+        id = 'tabs',
         tabs=[
-            {'label': 'High vacuum test', 'value': 1},
-            {'label': 'Capacity and Internal Resistance vs Temperature', 'value':  2},
-            {'label': 'Self-Discharge', 'value':  3},
+            {'label': 'Voltage' , 'value' : 0},
+            {'label': 'Current' , 'value' : 1},
+            {'label': 'Capacity' , 'value' : 2},
             {'label': 'LEO Cycling', 'value':  4},
             {'label': 'LEO Cycling', 'value':  5},
             {'label': 'Reduced pressure 30 % DOD Cycling', 'value':  6},
             {'label': 'Reduced pressure 80% DOD Cycling', 'value':  7}
             
-        ],
-        #value=3,
-        id='tabs',
+        ]
     ),
-     html.Div(id='tab-output')
-    ], style={
+    dcc.Graph(
+        id = 'Graph'
+        )
+   # html.Div( id = 'cache' , style={'display':'none'})
+]
+, style={
         'width': '80%',
         'fontFamily': 'Sans-Serif',
         'margin-left': 'auto',
         'margin-right': 'auto'
-    },
+    })
 
-    html.Div([
-        html.Div([
-            html.H3('Voltage'),
-            dcc.Graph(id='g1', figure=fig_voltage)
-        ], className="six columns"),
+@app.callback(Output('Graph', 'figure'), [Input('tabs', 'value')])
+def update_graph(value):
+    return fig[value % 3]
 
-        html.Div([
-            html.H3('Current'),
-            dcc.Graph(id='g2', figure=fig_current)
-        ], className="six columns"),
-             
-        html.Div([
-            html.H3('Capacity'),
-            dcc.Graph(id='g3', figure=fig_capacity)
-        ], className="six columns"),
-    ], className="row")
-])
-
-app.css.append_css({
-    'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
-})
 
 if __name__ == '__main__':
     app.run_server(debug=True)
