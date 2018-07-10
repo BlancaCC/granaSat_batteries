@@ -1,6 +1,8 @@
 # Instalación de dash
 
 ```
+pip3 install testresources --user ## ¿utiliza para pandas?
+
 pip install dash==0.21.1  # The core dash backend
 pip install dash-renderer==0.13.0  # The dash front-end
 pip install dash-html-components==0.11.0  # HTML components
