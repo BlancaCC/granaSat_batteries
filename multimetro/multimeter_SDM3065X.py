@@ -6,6 +6,7 @@ class SDM3065X:
 			self.instr = instr
 			self.plc_current = 10
 			self.plc_volt = 10
+			self.thermocouple = '';
 
 	def set_plc_current(self, plc):
 		if not (plc!=100 or plc!=10 or plc!=1 or plc!=0.5 or plc!=0.05 or plc!=0.005):

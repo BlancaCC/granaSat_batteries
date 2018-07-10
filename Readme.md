@@ -1,6 +1,6 @@
 # GranaSat batteries
 
-Python proyect to control and measure batteries chargue and dischargue.
+Python project to control and measure batteries charge and discharge.
 GranaSat 2018
 
 ## Comandos git  
