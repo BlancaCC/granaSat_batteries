@@ -28,12 +28,12 @@ df = pd.read_csv('df.csv' , header=None)
 # Get values grahp
 voltage = go.Scatter(
     y = df[0],
-    x = df [2],
+    x = df[2],
     name = 'voltage'
 )
 current = go.Scatter(
     y = df[1],
-    x = df [2],
+    x = df[2],
     name = 'current'
 )
 
