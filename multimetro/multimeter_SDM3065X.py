@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	sup = SDM3065X(inst)
 	print(inst.query('*IDN?'))
 	plc_volt=1
-	plc_current=100	
+	plc_current=100
 	sup.set_plc_current(plc_current)
 	sup.set_plc_volt(plc_volt)
 	inst.timeout = 10000
