@@ -65,8 +65,8 @@ app.layout = html.Div([
     html.H1('Results'),
     # Select test
     html.Label('Test selection:'),
-    dcc.Tabs(
-        tabs=[
+    dcc.Dropdown(
+        option=[
             {'label': 'High vacuum test', 'value': 1},
             {'label': 'Capacity and Internal Resistance vs Temperature', 'value':  2},
             {'label': 'Self-Discharge', 'value':  3},

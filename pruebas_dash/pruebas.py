@@ -1,114 +1,102 @@
 import dash
-from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-from loremipsum import get_sentences
+import pandas as pd
+import plotly.graph_objs as go
 
 app = dash.Dash()
 
-app.scripts.config.serve_locally = True
+df = pd.read_csv(
+    'https://gist.githubusercontent.com/chriddyp/'
+    'cb5392c35661370d95f300086accea51/raw/'
+    '8e0768211f6b747c0db42a9ce9a0937dafcbd8b2/'
+    'indicators.csv')
 
-vertical = True
+available_indicators = df['Indicator Name'].unique()
 
-if not vertical:
-    app.layout = html.Div([
-        dcc.Tabs(
-            tabs=[
-                {'label': 'Market Value', 'value': 1},
-                {'label': 'Usage Over Time', 'value': 2},
-                {'label': 'Predictions', 'value': 3},
-                {'label': 'Target Pricing', 'value': 4},
-            ],
-            value=3,
-            id='tabs',
-            vertical=vertical
-        ),
-        html.Div(id='tab-output')
-    ], style={
-        'width': '80%',
-        'fontFamily': 'Sans-Serif',
-        'margin-left': 'auto',
-        'margin-right': 'auto'
-    })
+app.layout = html.Div([
+    html.Div([
 
-else:
-    app.layout = html.Div([
-        html.Div(
-            dcc.Tabs(
-                tabs=[
-                    {'label': 'Market Value', 'value': 1},
-                    {'label': 'Usage Over Time', 'value': 2},
-                    {'label': 'Predictions', 'value': 3},
-                    {'label': 'Target Pricing', 'value': 4},
-                ],
-                value=3,
-                id='tabs',
-                vertical=vertical,
-                style={
-                    'height': '100vh',
-                    'borderRight': 'thin lightgrey solid',
-                    'textAlign': 'left'
-                }
+        html.Div([
+            dcc.Dropdown(
+                id='xaxis-column',
+                options=[{'label': i, 'value': i} for i in available_indicators],
+                value='Fertility rate, total (births per woman)'
             ),
-            style={'width': '20%', 'float': 'left'}
-        ),
-        html.Div(
-            html.Div(id='tab-output'),
-            style={'width': '80%', 'float': 'right'}
-        )
-    ], style={
-        'fontFamily': 'Sans-Serif',
-        'margin-left': 'auto',
-        'margin-right': 'auto',
-    })
+            dcc.RadioItems(
+                id='xaxis-type',
+                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                value='Linear',
+                labelStyle={'display': 'inline-block'}
+            )
+        ],
+        style={'width': '48%', 'display': 'inline-block'}),
 
+        html.Div([
+            dcc.Dropdown(
+                id='yaxis-column',
+                options=[{'label': i, 'value': i} for i in available_indicators],
+                value='Life expectancy at birth, total (years)'
+            ),
+            dcc.RadioItems(
+                id='yaxis-type',
+                options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                value='Linear',
+                labelStyle={'display': 'inline-block'}
+            )
+        ],style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
+    ]),
 
-@app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
-def display_content(value):
-    data = [
-        {
-            'x': [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-                  2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012],
-            'y': [219, 146, 112, 127, 124, 180, 236, 207, 236, 263,
-                  350, 430, 474, 526, 488, 537, 500, 439],
-            'name': 'Rest of world',
-            'marker': {
-                'color': 'rgb(55, 83, 109)'
-            },
-            'type': ['bar', 'scatter', 'box'][int(value) % 3]
-        },
-        {
-            'x': [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-                  2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012],
-            'y': [16, 13, 10, 11, 28, 37, 43, 55, 56, 88, 105, 156, 270,
-                  299, 340, 403, 549, 499],
-            'name': 'China',
-            'marker': {
-                'color': 'rgb(26, 118, 255)'
-            },
-            'type': ['bar', 'scatter', 'box'][int(value) % 3]
-        }
-    ]
+    dcc.Graph(id='indicator-graphic'),
 
-    return html.Div([
-        dcc.Graph(
-            id='graph',
-            figure={
-                'data': data,
-                'layout': {
-                    'margin': {
-                        'l': 30,
-                        'r': 0,
-                        'b': 30,
-                        't': 0
-                    },
-                    'legend': {'x': 0, 'y': 1}
-                }
+    dcc.Slider(
+        id='year--slider',
+        min=df['Year'].min(),
+        max=df['Year'].max(),
+        value=df['Year'].max(),
+        step=None,
+        marks={str(year): str(year) for year in df['Year'].unique()}
+    )
+])
+
+@app.callback(
+    dash.dependencies.Output('indicator-graphic', 'figure'),
+    [dash.dependencies.Input('xaxis-column', 'value'),
+     dash.dependencies.Input('yaxis-column', 'value'),
+     dash.dependencies.Input('xaxis-type', 'value'),
+     dash.dependencies.Input('yaxis-type', 'value'),
+     dash.dependencies.Input('year--slider', 'value')])
+def update_graph(xaxis_column_name, yaxis_column_name,
+                 xaxis_type, yaxis_type,
+                 year_value):
+    dff = df[df['Year'] == year_value]
+
+    return {
+        'data': [go.Scatter(
+            x=dff[dff['Indicator Name'] == xaxis_column_name]['Value'],
+            y=dff[dff['Indicator Name'] == yaxis_column_name]['Value'],
+            text=dff[dff['Indicator Name'] == yaxis_column_name]['Country Name'],
+            mode='markers',
+            marker={
+                'size': 15,
+                'opacity': 0.5,
+                'line': {'width': 0.5, 'color': 'white'}
             }
-        ),
-        html.Div(' '.join(get_sentences(10)))
-    ])
+        )],
+        'layout': go.Layout(
+            xaxis={
+                'title': xaxis_column_name,
+                'type': 'linear' if xaxis_type == 'Linear' else 'log'
+            },
+            yaxis={
+                'title': yaxis_column_name,
+                'type': 'linear' if yaxis_type == 'Linear' else 'log'
+            },
+            margin={'l': 40, 'b': 40, 't': 10, 'r': 0},
+            hovermode='closest'
+        )
+    }
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
