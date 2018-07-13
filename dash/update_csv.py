@@ -7,6 +7,8 @@ import plotly
 from dash.dependencies import Input, Output
 import random as rd
 
+import my_csv
+
 
 LENGHT = 15 #number of elements to be representates at maximun
 data = {
@@ -23,7 +25,7 @@ app.layout = html.Div(
         dcc.Graph( id = 'life-update-graph'),
         dcc.Interval(
             id = 'interval',
-            interval = 1*1000, # work in milliseconds
+            interval = 1*100, # work in milliseconds
             n_intervals = 0
         )
     ])
@@ -36,6 +38,11 @@ def update_graph(n):
     if n > LENGHT:
         data['y'] = data['y'][1:]+[new_data]
         data['x'] = list (map (lambda x: x+1 , data['x']) )
+        
+        # all data are new, so save into the cvs file
+        if n % LENGHT == 0:
+            my_csv.save_csv( "data.cvs" , [ data['x'] , data['y'] ] )
+            print ("Updating in data.cvs")
     else:
         data['x'].append(new_data)
 

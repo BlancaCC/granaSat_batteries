@@ -80,6 +80,7 @@ app.layout = html.Div([
             {'label': 'Reduced pressure 80% DOD Cycling', 'value':  7}
             
         ]
+        #,        vertical=True
     ),
     dcc.Graph(
         id = 'Graph'
