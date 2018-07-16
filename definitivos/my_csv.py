@@ -7,27 +7,29 @@ author: Blanca Cano
 import csv
 import subprocess as shell
 
+AUX_FILE = '.Test'
 def save_csv(fname , column ):
     """
 @brief: save x and i in the file fname.csv
 @param fname: file's fname, if it does not finish in .csv the funcion would add it
 @param column: list of list fo columns
 """
-    if True : #test if name is None
+    if fname[:len( AUX_FILE) ] != AUX_FILE: # hide file
     # renaming with correct extension
         if fname[ -4: ]!= '.csv':
             if fname.find('.') > -1:
                 fname = fname[: fname.find('.')]+'.csv'
             else:
                 fname += '.csv'
-
+    else:
+        fname += '.csv'
             # write part
-        with open( fname , 'a', newline = '\n' ) as csvfile:
-            csv_file = csv.writer(csvfile , delimiter = ',')
-            for line in zip (*column ):
-                csv_file.writerow( line)
+    with open( fname , 'a', newline = '\n' ) as csvfile:
+        csv_file = csv.writer(csvfile , delimiter = ',')
+        for line in zip (*column ):
+            csv_file.writerow( line)
                         
-            csvfile.close()
+        csvfile.close()
 
 #tests 
 if __name__ == '__main__':
