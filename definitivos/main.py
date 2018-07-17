@@ -70,11 +70,13 @@ app.layout = html.Div( [
             n_intervals = 0
         ),
     html.Div(dcc.Input(id='input-box', type='text')),
-    html.Button('Save', id='button' , n_clicks = 0 ),
-    html.Div(id='output-container-button',
-             children='Enter a name and press Save'),
-    html.Button('Remove not save data', id='rm_button'),
-    html.Div( id = 'last_reset' , children = 'Las reset: never')
+    html.Div([
+        html.Button('Save', id='button' , n_clicks = 0 ),
+        html.Div(id='output-container-button',
+                 children='Enter a name and press Save'),
+        html.Button('Remove not save data', id='rm_button'),
+        html.Div( id = 'last_reset' , children = 'Las reset: never')
+        ])
 ])
 
 
