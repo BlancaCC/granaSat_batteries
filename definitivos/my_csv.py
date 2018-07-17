@@ -8,11 +8,9 @@ import csv
 import subprocess as shell
 
 AUX_FILE = '.Test'
-def save_csv(fname , column ):
+def give_name(fname):
     """
-@brief: save x and i in the file fname.csv
-@param fname: file's fname, if it does not finish in .csv the funcion would add it
-@param column: list of list fo columns
+return name.csv
 """
     if fname[:len( AUX_FILE) ] != AUX_FILE: # hide file
     # renaming with correct extension
@@ -23,7 +21,17 @@ def save_csv(fname , column ):
                 fname += '.csv'
     else:
         fname += '.csv'
-            # write part
+    return fname
+    
+def save_csv(fname , column ):
+    """
+@brief: save x and i in the file fname.csv
+@param fname: file's fname, if it does not finish in .csv the funcion would add it
+@param column: list of list fo columns
+"""
+    fname = give_name(fname)
+    
+    # write part
     with open( fname , 'a', newline = '\n' ) as csvfile:
         csv_file = csv.writer(csvfile , delimiter = ',')
         for line in zip (*column ):
