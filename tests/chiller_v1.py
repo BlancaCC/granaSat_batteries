@@ -7,7 +7,7 @@ Problems:
 - Hay que hacer un flush despues de cada lectura para limpiar??
 """
 
-class CHILLER: #cambiar nombre
+class Chiller: #cambiar nombre
 	def __init__(self, ser):
 		self.ser = ser
 

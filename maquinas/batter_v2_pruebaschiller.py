@@ -112,7 +112,7 @@ class Battery():
 
 
 
-	def discharge(self, curr, temperature, sample_time = 5000 ,log_file = None):
+	def discharge(self, curr, temperature, temp_value, sample_time = 5000 ,log_file = None):
 		FINISHED = False
 		self._load.input_off()
 		self._load.set_current(curr)
@@ -129,10 +129,10 @@ class Battery():
 			current = self._multimm.current()
 			if temperature:
 				TEMPERATURE = self._multimm.temperature()
-				if (self.multi.get_temperature() > temp):
+				if (self.multi.get_temperature() > temp_value):
 					self.chiller.set_pump_speed(set_temp,L)
 
-				elif (self.multi.get_temperature() < temp):
+				elif (self.multi.get_temperature() < temp_value):
 					self.chiller.set_pump_speed(set_temp,H)
 
 			now = int(round(time.time() * 1000))
@@ -144,7 +144,7 @@ class Battery():
 		self._multimm.reset()
 				
 
-	def charge(self, curr, temperature, sample_time = 5300, output = "+25V", log_file = None):
+	def charge(self, curr, temperature, temp_value, sample_time = 5300, output = "+25V", log_file = None):
 		FINISHED = False
 		self._supply.output_off()
 		self._supply.select_output(output)
@@ -170,10 +170,10 @@ class Battery():
 
 				if temperature:
 					TEMPERATURE = self._multimm.temperature()
-					if (self.multi.get_temperature() > temp):
+					if (self.multi.get_temperature() > temp_value):
 						self.chiller.set_pump_speed(set_temp,L)
 
-					elif (self.multi.get_temperature() < temp):
+					elif (self.multi.get_temperature() < temp_value):
 						self.chiller.set_pump_speed(set_temp,H)
 
 				voltage = self._supply.voltage()

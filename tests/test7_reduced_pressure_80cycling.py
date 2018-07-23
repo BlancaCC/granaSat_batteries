@@ -5,6 +5,8 @@ from supply_E3631A import SupplyE3631A
 from load_6063B import Load6063B
 from multimeter_SDM3065X import MultimeterSDM3065X
 from batter_v2_pruebaschiller import Battery
+from control_temperatura_v1 import temp_control
+from chiller_v1 import Chiller
 
 def close_devices(load, sup):
     load.input_off()
@@ -20,13 +22,24 @@ supl = SupplyE3631A(sup_ins)
 multimm = MultimeterSDM3065X(multimeter_ins)
 print(rm.list_resources())
 multimm.reset()
+ser = serial.Serial(
+		port='COM3',
+		baudrate=9600,
+		parity=serial.PARITY_ODD,
+		stopbits=serial.STOPBITS_TWO,
+		bytesize=serial.SEVENBITS
+		)
+chiller = Chiller(ser)
+temp = temp_control(chiller, multimm)
 
 
 C = 1.8
 bat_name="FT103450P_1_Cd50"
 bat = Battery(charge=0, v_max = 7, v_min = 3, eoc_current=1.8*0.02)
-bat.discharge(C/10, False)
-bat.charge(C/10, False)
-#Vacuum modification
-bat.discharge(C/10, False)
+#Vacuum change
+for x in range(0,49):
+	bat.discharge(C/3, True, 20)
+	bat.charge(C/2, True, 20)
+
+bat.discharge()
 print("Quitting---")
