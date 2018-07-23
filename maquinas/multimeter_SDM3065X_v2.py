@@ -76,8 +76,8 @@ if __name__ == '__main__':
 	sup = SDM3065X(inst)
 	#print(inst.query('*IDN?'))
 	
-	plc_volt=1
-	plc_current=100	
+	plc_volt=0.5
+	plc_current=0.5	
 	thermocouple_type = 'JITS90'
 	sensor_type = 'THER'
 
@@ -88,6 +88,6 @@ if __name__ == '__main__':
 
 	inst.timeout = 10000
 	
-	#print(sup.voltage())
-	#print(sup.current())
+	print(sup.voltage())
+	print(sup.current())
 	print(sup.temperature())
