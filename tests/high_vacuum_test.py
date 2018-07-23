@@ -4,7 +4,7 @@ import time
 from supply_E3631A import SupplyE3631A
 from load_6063B import Load6063B
 from multimeter_SDM3065X import MultimeterSDM3065X
-from battery import Battery
+from batter_v2_pruebaschiller import Battery
 
 def close_devices(load, sup):
     load.input_off()
@@ -25,9 +25,9 @@ multimm.reset()
 C = 1.8
 bat_name="FT103450P_1_Cd50"
 bat = Battery(charge=0, v_max = 7, v_min = 3, eoc_current=1.8*0.02)
-bat.set_charge(0)
-bat.charge()
+bat.discharge(C/10, False)
+bat.charge(C/10, False)
 bat.discharge()
-bat.charge()
+
 bat.discharge()
 print("Quitting---")

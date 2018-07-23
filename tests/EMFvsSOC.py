@@ -4,7 +4,7 @@ import time
 from supply_E3631A import SupplyE3631A
 from load_6063B import Load6063B
 from multimeter_SDM3065X import MultimeterSDM3065X
-from battery import Battery
+from batter_v2_pruebaschiller import Battery
 
 def close_devices(load, sup):
     load.input_off()
