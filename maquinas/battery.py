@@ -7,7 +7,7 @@ from load_6063B import Load6063B
 from multimeter_SDM3065X import MultimeterSDM3065X
 
 FINISHED = False
-
+TEMPERATURE = 0
 class Battery():
 	def __init__(self,charge=1000, v_max=7, v_min=3, eoc_current= 0.2):
 		import visa
@@ -108,7 +108,7 @@ class Battery():
 				t2=0
 		self._supply.output_off()
 
-	def discharge(self, curr, sample_time = 5000 ,log_file = None):
+	def discharge(self, curr, temperature, sample_time = 5000 ,log_file = None):
 		FINISHED = False
 		self._load.input_off()
 		self._load.set_current(curr)
@@ -123,6 +123,8 @@ class Battery():
 		while voltage > self._v_min:
 			voltage = self._multimm.voltage()
 			current = self._multimm.current()
+			if temperature:
+				TEMPERATURE = self._multimm.temperature()
 			now = int(round(time.time() * 1000))
 			self._charge = self._charge + current*(now-before)
 			print(f'Current: {current}, Voltage: {voltage}, Time: {now-before}, Charge: {self._charge}')
@@ -132,7 +134,7 @@ class Battery():
 		self._multimm.reset()
 				
 
-	def charge(self, curr, sample_time = 5300, output = "+25V", log_file = None):
+	def charge(self, curr, temperature, sample_time = 5300, output = "+25V", log_file = None):
 		FINISHED = False
 		self._supply.output_off()
 		self._supply.select_output(output)
@@ -155,6 +157,8 @@ class Battery():
 			new_now = now-before
 			while new_now < sample_time:
 				before = now
+				if temperature:
+					TEMPERATURE = self._multimm.temperature()
 				voltage = self._supply.voltage()
 				current = self._supply.current()
 				now = int(round(time.time() * 1000))
@@ -172,6 +176,9 @@ class Battery():
 
 	def get_finished(self):
 		return FINISHED
+
+	def get_temperature(self):
+		return TEMPERATURE
 
 if __name__ == '__main__': 
 	

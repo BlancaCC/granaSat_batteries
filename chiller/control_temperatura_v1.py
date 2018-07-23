@@ -17,11 +17,11 @@ class temp_control:
 
 		import time
 		while (finished):
-			if (self.multi.temperature > temp):
+			if (self.multi.get_temperature() > temp):
 					self.chiller.set_pump_speed(set_temp,L) #parece que no hay una opcion de apagar solo de dejar la velocidad de pump en baja
 					finished = battery.get_finished()
 
-			elif (self.multi.temperature < temp):
+			elif (self.multi.get_temperature() < temp):
 					self.chiller.set_pump_speed(set_temp,H)
 					finished = battery.get_finished()
 			time.sleep(1)
