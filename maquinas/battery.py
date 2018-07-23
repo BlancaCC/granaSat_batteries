@@ -6,6 +6,7 @@ from supply_E3631A import SupplyE3631A
 from load_6063B import Load6063B
 from multimeter_SDM3065X import MultimeterSDM3065X
 
+FINISHED = False
 
 class Battery():
 	def __init__(self,charge=1000, v_max=7, v_min=3, eoc_current= 0.2):
@@ -108,6 +109,7 @@ class Battery():
 		self._supply.output_off()
 
 	def discharge(self, curr, sample_time = 5000 ,log_file = None):
+		FINISHED = False
 		self._load.input_off()
 		self._load.set_current(curr)
 		self._load.input_on()
@@ -126,10 +128,12 @@ class Battery():
 			print(f'Current: {current}, Voltage: {voltage}, Time: {now-before}, Charge: {self._charge}')
 			before=now
 
+		FINISHED = True
 		self._multimm.reset()
 				
 
 	def charge(self, curr, sample_time = 5300, output = "+25V", log_file = None):
+		FINISHED = False
 		self._supply.output_off()
 		self._supply.select_output(output)
 		self._supply.limit_current(curr)
@@ -158,7 +162,7 @@ class Battery():
 
 			self._charge = self._charge + current*(new_now)
 			print(f'Current: {current}, Voltage: {voltage}, Time: {new_now}, Charge: {self._charge}')
-
+		FINISHED = True
 		self._multimm.reset()
 					 
 	
@@ -166,8 +170,8 @@ class Battery():
 	def set_charge(self,val):
 		self._charge = val   
 
-	def jkl(self):
-		print('lsf')
+	def get_finished(self):
+		return FINISHED
 
 if __name__ == '__main__': 
 	

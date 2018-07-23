@@ -29,7 +29,7 @@ class CHILLER: #cambiar nombre
 	def read_temperature_ext(self):
 		self.ser.write('RT2')
 		return float(read_data())
-
+		
 	# Read Dsiplayed Setpoint
 	def read_disp_setpoint(self):
 		self.ser.write('RS')		
@@ -197,7 +197,6 @@ class CHILLER: #cambiar nombre
 	# Set High Temperature Warning
 	def set_high_temp_warning(self, value):
 		self.ser.write(f'SHTW {value}')
-		
 		return str(read_data())
 
 	# Set Low Temperature Fault
