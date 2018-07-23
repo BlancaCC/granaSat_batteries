@@ -108,6 +108,10 @@ class Battery():
 				t2=0
 		self._supply.output_off()
 
+
+
+
+
 	def discharge(self, curr, temperature, sample_time = 5000 ,log_file = None):
 		FINISHED = False
 		self._load.input_off()
@@ -125,7 +129,12 @@ class Battery():
 			current = self._multimm.current()
 			if temperature:
 				TEMPERATURE = self._multimm.temperature()
-				
+				if (self.multi.get_temperature() > temp):
+					self.chiller.set_pump_speed(set_temp,L)
+
+				elif (self.multi.get_temperature() < temp):
+					self.chiller.set_pump_speed(set_temp,H)
+
 			now = int(round(time.time() * 1000))
 			self._charge = self._charge + current*(now-before)
 			print(f'Current: {current}, Voltage: {voltage}, Time: {now-before}, Charge: {self._charge}')
@@ -158,8 +167,15 @@ class Battery():
 			new_now = now-before
 			while new_now < sample_time:
 				before = now
+
 				if temperature:
 					TEMPERATURE = self._multimm.temperature()
+					if (self.multi.get_temperature() > temp):
+						self.chiller.set_pump_speed(set_temp,L)
+
+					elif (self.multi.get_temperature() < temp):
+						self.chiller.set_pump_speed(set_temp,H)
+
 				voltage = self._supply.voltage()
 				current = self._supply.current()
 				now = int(round(time.time() * 1000))
