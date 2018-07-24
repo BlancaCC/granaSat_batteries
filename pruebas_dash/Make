@@ -1,2 +1,0 @@
-all:
-	python app.py
